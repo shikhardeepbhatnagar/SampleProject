@@ -1,0 +1,75 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:PitchreadyGlobal.GlobalValueConverters"
+             xmlns:telerikCtrl="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Data"
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation" 
+             AllowDrop="True" 
+             x:Class="PitchreadyGlobal.UserControls.LogoTileUC"
+             mc:Ignorable="d" 
+             xmlns:ViewModel="clr-namespace:PitchreadyGlobal.ViewModels" Cursor="Hand">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converter:UrlResolver x:Key="UrlResolver"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/PitchreadyGlobal;component/ApplicationResources/Media/CommonSvgIcons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="Transparent" AllowDrop="True">
+
+        <Border AllowDrop="True" Grid.Row="0" BorderBrush="Gray" Margin="5" x:Name="logoBorder" BorderThickness="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <telerik:RadBusyIndicator Name="radBusyIndicator" 
+                                      Width="100"
+                                              Foreground="Black" 
+                                              Background="Transparent" 
+                                              VerticalAlignment="Stretch" 
+                                              IsBusy="{Binding IsLoading}" 
+                                              HorizontalAlignment="Stretch"
+                                              BusyContent="{Binding LoadingText}">
+                <Grid x:Name="BaseGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <StackPanel Margin="2" AllowDrop="True" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label AllowDrop="True" x:Name="countLbl" Background="Gray" Width="18" Height="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Cursor="Hand" Margin="0" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" FontSize="10" Content="{Binding LogoData.RowCounter}"/>
+                            <Button x:Name="AddLogoBtn" ToolTip="Duplicate Logo" Grid.Column="1" Style="{StaticResource ButtonStyleNoHighlighting}" Command="{Binding CreateCopy_Command}" Height="13" Width="13" Padding="0,0,0,2" Margin="2,0" BorderBrush="Transparent">
+                                <Button.Background>
+                                    <ImageBrush Stretch="Uniform" ImageSource="/PitchreadyGlobal;component/ApplicationResources/Media/logo_tool_duplicate.png"/>
+                                </Button.Background>
+                            </Button>
+                            <Button x:Name="deleteBtn" Grid.Column="2" ToolTip="Delete logo" Height="13" Width="13" Style="{StaticResource ButtonStyleNoHighlighting}" Command="{Binding Delete_command}" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                <Button.Background>
+                                    <ImageBrush  Stretch="Uniform" ImageSource="{StaticResource DeleteDrawingImage}" />
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                        <Image AllowDrop="True"  Source="{Binding LogoData.LocalLogoPath, Converter={StaticResource ResourceKey=UrlResolver}}"  RenderOptions.BitmapScalingMode="Fant" Height="90" Width="100" />
+                        <CheckBox Width="Auto" Foreground="Blue" x:Name="logoCheckBox" Visibility="Hidden"  telerik:StyleManager.Theme="Fluent" Unchecked="logoCheckBox_Unchecked" Checked="logoCheckBox_Checked" >
+                        </CheckBox>
+                    </StackPanel>
+                    <Button  x:Name="BoxView" Grid.ColumnSpan="2" Visibility="{Binding IsRetryCommandVisible}" Command="{Binding Retry_Command}" ToolTip="Unable to load logo.Click to try again." Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Border Background="#33000000" >
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Image Source="pack://application:,,,/PitchreadyPowerPoint;component/Media/Icons/LogoTool/refresh-icon-enable.png" Grid.Column="1" Height="25" Width="25" ToolTip="Retry" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </telerik:RadBusyIndicator>
+        </Border>
+    </Grid>
+</UserControl>

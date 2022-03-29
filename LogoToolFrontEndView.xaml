@@ -1,0 +1,653 @@
+﻿<Window x:Class="PitchreadyGlobal.Views.LogoToolFrontEndView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:Converter ="clr-namespace:PitchreadyGlobal.GlobalValueConverters"
+        xmlns:p="clr-namespace:PitchreadyGlobal.GlobalCustomControls"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:CustomCtrls="clr-namespace:PitchreadyGlobal.UserControls"
+        xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Wpf"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        mc:Ignorable="d" Title = "Pitchready &#8211; Logo Library &#8211; POWERED BY MIND + MACHINE"
+        d:DesignHeight="800" d:DesignWidth="1200" Loaded="Window_Loaded" Closing="Window_Closing" Closed="LogoForm_Closed" GotMouseCapture="Window_GotMouseCapture" Activated="Window_Activated" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" GotFocus="Window_GotFocus" WindowState="Normal" Icon="/PitchreadyGlobal;component/ApplicationResources/Media/TopIcon.ico">
+    <Window.Resources>
+        <ResourceDictionary>
+            <Converter:BooleanToVisiblityConverter x:Key="BooleanToVisiblityConverter"/>
+            <DataTemplate x:Key="headerCompanyTemplate">
+                <TextBlock Text="Company" FontWeight="Bold"/>
+            </DataTemplate>
+            <DataTemplate x:Key="headerBrandTemplate">
+                <TextBlock Text="Brand" FontWeight="Bold"/>
+            </DataTemplate>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/PitchreadyGlobal;component/ApplicationResources/Media/CommonSvgIcons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/PitchreadyGlobal;component/ApplicationResources/Media/IconsLogoTool.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <telerik:RadBusyIndicator x:Name="busyIndicator" BusyContent="Please Wait..." IsBusy="False">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions> 
+            <!--<StackPanel Grid.Row="0" Background="{DynamicResource SecondaryToolbarColor}" VerticalAlignment="Center">
+                <Label FontFamily="Verdana" FontSize="18" FontWeight="Light" Foreground="#226440">Logo Library</Label>
+            </StackPanel>-->
+
+            <p:ThemeHeaderWithButtons Grid.Row="0" HeaderName="Logo Library" x:Name="Header"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="10" Width="270" MaxWidth="350"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid x:Name="rootGrid" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="15"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Width="{Binding ElementName=rootGrid, Path=Width}">
+                        <telerik:RadTabControl SelectionChanged="RadTabControl_SelectionChanged" SelectedIndex="0" Width="{Binding ElementName=rootGrid, Path=Width}">
+                            <telerik:RadTabControl.Items>
+                                <telerik:RadTabItem Name="companyTab" HeaderTemplate="{StaticResource headerCompanyTemplate}">
+                                    <!--<telerik:RadTabItem.Content>-->
+                                    <Grid Margin="5,0,0,0" Width="{Binding ElementName=rootGrid, Path=Width}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="90"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderBrush="LightGray" BorderThickness="0">
+                                            <StackPanel Orientation="Vertical">
+                                                <Label FontWeight="Bold">Search by Name/Ticker</Label>
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <telerik:RadAutoCompleteBox Grid.Column="0" KeyboardNavigation.TabNavigation="Local" TabIndex="0" Margin="0,1,0,5" SearchTextChanged="searchCompany_SearchTextChanged" VerticalContentAlignment="Center"  PreviewKeyDown="searchCompany_PreviewKeyDown" KeyDown="searchCompany_KeyDown" x:Name="searchCompany" SelectionMode="Single" SelectionChanged="searchCompany_SelectionChanged" WatermarkContent="Search..." BorderBrush="Gray" />
+                                                    <Button Grid.Column="2" KeyboardNavigation.TabNavigation="Local" TabIndex="1" Style="{StaticResource ButtonStyle1}" x:Name="searchBtn" Click="ApplyBtnSearch_Click"   Cursor="Hand" ToolTip="Search" BorderBrush="LightGray"  Foreground="AliceBlue" Height="16" Width="16" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                        <Button.Background>
+                                                            <ImageBrush ImageSource="{StaticResource Excel_searchlogoDrawingImage}" Stretch="Uniform"/>
+                                                        </Button.Background>
+                                                    </Button>
+                                                    <TextBlock x:Name="SerchStats" Grid.Row="1" Grid.ColumnSpan="2" Text="Please enter atleast 2 characters. " ToolTip="{Binding ElementName=SerchStats, Path=Text}" FontSize="9" HorizontalAlignment="Center" TextAlignment="Center" Visibility="Collapsed" Foreground="Red" />
+                                                </Grid>
+                                                <Grid x:Name="stkPnlOR" HorizontalAlignment="Left">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock>.............................................</TextBlock>
+                                                    <Border Grid.Column="1" Background="LightGray" CornerRadius="100">
+                                                        <Label FontWeight="Bold">OR</Label>
+                                                    </Border>
+                                                    <TextBlock Grid.Column="2">.............................................</TextBlock>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+                                        <Label x:Name="lblFilters" Grid.Row="1" FontWeight="Bold">Filters</Label>
+                                        <Grid Grid.Row="2">
+                                            <ScrollViewer x:Name="scrlTreeView" HorizontalScrollBarVisibility="Auto" telerik:StyleManager.Theme="Fluent">
+                                                <Border>
+                                                    <StackPanel Orientation="Vertical" Name="filterPanel">
+                                                        <telerik:RadExpander KeyboardNavigation.TabNavigation="Local" telerik:StyleManager.Theme="Vista" TabIndex="2" ScrollViewer.CanContentScroll="True" Collapsed="filter1Expander_Collapsed" Expanded="filter1Expander_Expanded" telerik:AnimationManager.IsAnimationEnabled="False"  Visibility="Collapsed" x:Name="filter1Expander" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                                                            <StackPanel Orientation="Vertical">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <telerik:RadAutoCompleteBox SearchTextChanged="searchTree_SearchTextChanged" Margin="0,1,0,5" MinWidth="190"  Grid.Row="0" HorizontalAlignment="Left" VerticalContentAlignment="Center" KeyDown="searchTree_KeyDown" x:Name="searchTree" SelectionMode="Single" WatermarkContent="Search..." BorderBrush="Gray" />
+                                                                    <telerik:RadButton Style="{StaticResource ButtonStyle1}" x:Name="searchBtnGeo" Click="searchBtnGeo_Click"   Cursor="Hand" ToolTip="Search" BorderBrush="LightGray" Foreground="AliceBlue" Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                                        <telerik:RadButton.Background>
+                                                                            <ImageBrush ImageSource="{StaticResource Excel_searchlogoDrawingImage}" Stretch="Uniform"/>
+                                                                        </telerik:RadButton.Background>
+                                                                    </telerik:RadButton>
+                                                                </StackPanel>
+                                                                <telerik:RadTreeView Keyboard.PreviewKeyDown="radGeographyTreeView_PreviewKeyDown" PreviewMouseWheel="radGeographyTreeView_PreviewMouseWheel"  ScrollViewer.CanContentScroll="True" IsTriStateMode="True"  Margin="8" x:Name="radGeographyTreeView" IsOptionElementsEnabled="True">
+                                                                </telerik:RadTreeView>
+                                                            </StackPanel>
+                                                        </telerik:RadExpander>
+                                                        <telerik:RadExpander KeyboardNavigation.TabNavigation="Local" telerik:StyleManager.Theme="Vista" TabIndex="3" PreviewMouseWheel="radGeographyTreeView_PreviewMouseWheel"  Collapsed="filter1Expander_Collapsed" Expanded="filter1Expander_Expanded" telerik:AnimationManager.IsAnimationEnabled="False"  x:Name="filter2Expander" Visibility="Collapsed" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="5">
+                                                            <StackPanel Orientation="Vertical">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <telerik:RadAutoCompleteBox SearchTextChanged="searchradIndustryTree_SearchTextChanged" HorizontalAlignment="Left" Margin="0,1,0,5" MinWidth="190"  Grid.Row="0" VerticalContentAlignment="Center" KeyDown="searchradIndustryTree_KeyDown" x:Name="searchradIndustryTree" SelectionMode="Single" WatermarkContent="Search..." BorderBrush="Gray" />
+                                                                    <telerik:RadButton Style="{StaticResource ButtonStyle1}" x:Name="searchBtnInd" Click="searchBtnInd_Click"   Cursor="Hand" ToolTip="Search" BorderBrush="LightGray"  Foreground="AliceBlue" Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                                        <telerik:RadButton.Background>
+                                                                            <ImageBrush ImageSource="{StaticResource Excel_searchlogoDrawingImage}" Stretch="Uniform"/>
+                                                                        </telerik:RadButton.Background>
+                                                                    </telerik:RadButton>
+                                                                </StackPanel>
+                                                                <telerik:RadTreeView Keyboard.PreviewKeyDown="radIndustryTreeView_PreviewKeyDown"  IsTriStateMode="True"  Margin="8" x:Name="radIndustryTreeView" IsOptionElementsEnabled="True">
+
+                                                                </telerik:RadTreeView>
+                                                            </StackPanel>
+                                                        </telerik:RadExpander>
+                                                        <telerik:RadExpander KeyboardNavigation.TabNavigation="Local" telerik:StyleManager.Theme="Vista" TabIndex="4" PreviewMouseWheel="radGeographyTreeView_PreviewMouseWheel"  Collapsed="filter1Expander_Collapsed" Expanded="filter1Expander_Expanded" telerik:AnimationManager.IsAnimationEnabled="False"  x:Name="filter3Expander" Visibility="Collapsed" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="5">
+                                                            <StackPanel Orientation="Vertical">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <telerik:RadAutoCompleteBox SearchTextChanged="searchradFreeFilter1Tree_SearchTextChanged" HorizontalAlignment="Left" Margin="0,1,0,5" MinWidth="190"  Grid.Row="0" VerticalContentAlignment="Center" KeyDown="searchradFreeFilter1Tree_KeyDown" x:Name="searchradFreeFilter1Tree" SelectionMode="Single" WatermarkContent="Search..." BorderBrush="Gray" />
+                                                                    <telerik:RadButton Style="{StaticResource ButtonStyle1}" x:Name="searchBtnFilter3" Click="searchBtnFilter3_Click"   Cursor="Hand" ToolTip="Search" BorderBrush="LightGray"  Foreground="AliceBlue" Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                                        <telerik:RadButton.Background>
+                                                                            <ImageBrush ImageSource="{StaticResource Excel_searchlogoDrawingImage}" Stretch="Uniform"/>
+                                                                        </telerik:RadButton.Background>
+                                                                    </telerik:RadButton>
+                                                                </StackPanel>
+                                                                <telerik:RadTreeView Keyboard.PreviewKeyDown="radFreeFilter1TreeView_PreviewKeyDown"  IsTriStateMode="True"  Margin="8" x:Name="radFreeFilter1TreeView" IsOptionElementsEnabled="True">
+
+                                                                </telerik:RadTreeView>
+                                                            </StackPanel>
+                                                        </telerik:RadExpander>
+                                                        <telerik:RadExpander KeyboardNavigation.TabNavigation="Local" telerik:StyleManager.Theme="Vista" TabIndex="5" PreviewMouseWheel="radGeographyTreeView_PreviewMouseWheel"  Collapsed="filter1Expander_Collapsed" Expanded="filter1Expander_Expanded" telerik:AnimationManager.IsAnimationEnabled="False"  x:Name="filter4Expander" Visibility="Collapsed" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="5">
+                                                            <StackPanel Orientation="Vertical">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <telerik:RadAutoCompleteBox SearchTextChanged="searchradFreeFilter2Tree_SearchTextChanged" HorizontalAlignment="Left" Margin="0,1,0,5" MinWidth="190"  Grid.Row="0" VerticalContentAlignment="Center" KeyDown="searchradFreeFilter2Tree_KeyDown" x:Name="searchradFreeFilter2Tree" SelectionMode="Single" WatermarkContent="Search..." BorderBrush="Gray" />
+                                                                    <telerik:RadButton Style="{StaticResource ButtonStyle1}" x:Name="searchBtnFilter4" Click="searchBtnFilter4_Click"   Cursor="Hand" ToolTip="Search" BorderBrush="LightGray"  Foreground="AliceBlue" Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                                        <telerik:RadButton.Background>
+                                                                            <ImageBrush ImageSource="{StaticResource Excel_searchlogoDrawingImage}" Stretch="Uniform"/>
+                                                                        </telerik:RadButton.Background>
+                                                                    </telerik:RadButton>
+                                                                </StackPanel>
+                                                                <telerik:RadTreeView Keyboard.PreviewKeyDown="radFreeFilter2TreeView_PreviewKeyDown"  IsTriStateMode="True"  Margin="8" x:Name="radFreeFilter2TreeView" IsOptionElementsEnabled="True">
+
+                                                                </telerik:RadTreeView>
+                                                            </StackPanel>
+                                                        </telerik:RadExpander>
+                                                    </StackPanel>
+                                                </Border>
+                                            </ScrollViewer>
+                                        </Grid>
+                                    </Grid>
+                                    <!--</telerik:RadTabItem.Content>-->
+                                </telerik:RadTabItem>
+                                <telerik:RadTabItem Visibility="Collapsed" Loaded="brandTab_Loaded" Name="brandTab" HeaderTemplate="{StaticResource headerBrandTemplate}">
+                                    <telerik:RadTabItem.Content>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="90"></RowDefinition>
+                                                <RowDefinition Height="Auto"></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="LightGray" BorderThickness="0">
+                                                <StackPanel Orientation="Vertical">
+                                                    <Label Grid.Row="1" FontWeight="Bold">Search by Name/Ticker</Label>
+                                                    <DockPanel >
+                                                        <telerik:RadAutoCompleteBox KeyboardNavigation.TabNavigation="Local" TabIndex="0" Margin="0,1,0,5" Width="220"  Grid.Row="0" VerticalContentAlignment="Center" PreviewKeyDown="searchCompany_PreviewKeyDown" KeyDown="searchCompany_KeyDown" x:Name="searchCompanyBrand" SelectionMode="Single" SelectionChanged="searchCompany_SelectionChanged" WatermarkContent="Search..." BorderBrush="Gray" />
+                                                        <Button KeyboardNavigation.TabNavigation="Local" TabIndex="1" Style="{StaticResource ButtonStyle1}" x:Name="searchBtnBrand" Click="ApplyBtnSearch_Click"   Cursor="Hand" ToolTip="Search" BorderBrush="LightGray"  Foreground="AliceBlue" Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                            <Button.Background>
+                                                                <ImageBrush ImageSource="{StaticResource Excel_searchlogoDrawingImage}" Stretch="Uniform"/>
+                                                            </Button.Background>
+                                                        </Button>
+                                                    </DockPanel>
+
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <Label VerticalAlignment="Center">.......................................</Label>
+                                                        <Border VerticalAlignment="Center" Background="LightGray" CornerRadius="100">
+                                                            <Label VerticalAlignment="Center" FontWeight="Bold">OR</Label>
+                                                        </Border>
+                                                        <Label VerticalAlignment="Center">.......................................</Label>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Label Grid.Row="1" FontWeight="Bold">Filters</Label>
+                                            <Grid Grid.Row="2">
+                                                <ScrollViewer x:Name="scrlTreeViewBrand" HorizontalScrollBarVisibility="Auto" telerik:StyleManager.Theme="Fluent">
+                                                    <Border>
+                                                        <StackPanel Orientation="Vertical"  Name="filterPanelBrand">
+                                                            <telerik:RadExpander KeyboardNavigation.TabNavigation="Local" TabIndex="2" ScrollViewer.CanContentScroll="True" Collapsed="filter1Expander_Collapsed" Expanded="filter1Expander_Expanded" telerik:AnimationManager.IsAnimationEnabled="False"  Visibility="Visible" x:Name="filter1ExpanderBrand" Header="Geography" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                                                                <StackPanel Orientation="Vertical">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <telerik:RadAutoCompleteBox SearchTextChanged="searchTree_SearchTextChanged" Margin="0,1,0,5" Width="190"  Grid.Row="0" HorizontalAlignment="Left" VerticalContentAlignment="Center" KeyDown="searchTree_KeyDown" x:Name="searchTreeBrand" SelectionMode="Single" WatermarkContent="Search..." BorderBrush="Gray" />
+                                                                        <telerik:RadButton Style="{StaticResource ButtonStyle1}" x:Name="searchBtnGeoBrand" Click="searchBtnGeo_Click"   Cursor="Hand" ToolTip="Search" BorderBrush="LightGray"  Foreground="AliceBlue" Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                                            <telerik:RadButton.Background>
+                                                                                <ImageBrush ImageSource="{StaticResource Excel_searchlogoDrawingImage}" Stretch="Uniform"/>
+                                                                            </telerik:RadButton.Background>
+                                                                        </telerik:RadButton>
+                                                                    </StackPanel>
+                                                                    <telerik:RadTreeView Keyboard.PreviewKeyDown="radGeographyTreeView_PreviewKeyDown" PreviewMouseWheel="radGeographyTreeView_PreviewMouseWheel"  ScrollViewer.CanContentScroll="True" IsTriStateMode="True"  Margin="8" x:Name="radGeographyTreeViewBrand" IsOptionElementsEnabled="True">
+                                                                    </telerik:RadTreeView>
+                                                                </StackPanel>
+                                                            </telerik:RadExpander>
+                                                            <telerik:RadExpander KeyboardNavigation.TabNavigation="Local" TabIndex="3" PreviewMouseWheel="radGeographyTreeView_PreviewMouseWheel"  Collapsed="filter1Expander_Collapsed" Expanded="filter1Expander_Expanded" telerik:AnimationManager.IsAnimationEnabled="False"  x:Name="filter2ExpanderBrand" Visibility="Visible" Header="Industry" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="5">
+                                                                <StackPanel Orientation="Vertical">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <telerik:RadAutoCompleteBox SearchTextChanged="searchradIndustryTree_SearchTextChanged" HorizontalAlignment="Left" Margin="0,1,0,5" Width="190"  Grid.Row="0" VerticalContentAlignment="Center" KeyDown="searchradIndustryTree_KeyDown" x:Name="searchradIndustryTreeBrand" SelectionMode="Single" WatermarkContent="Search..." BorderBrush="Gray" />
+                                                                        <telerik:RadButton Style="{StaticResource ButtonStyle1}" x:Name="searchBtnIndBrand" Click="searchBtnInd_Click"   Cursor="Hand" ToolTip="Search" BorderBrush="LightGray"  Foreground="AliceBlue" Height="16" Width="16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                                            <telerik:RadButton.Background>
+                                                                                <ImageBrush ImageSource="{StaticResource Excel_searchlogoDrawingImage}" Stretch="Uniform"/>
+                                                                            </telerik:RadButton.Background>
+                                                                        </telerik:RadButton>
+                                                                    </StackPanel>
+                                                                    <telerik:RadTreeView Keyboard.PreviewKeyDown="radIndustryTreeView_PreviewKeyDown"  IsTriStateMode="True"  Margin="8" x:Name="radIndustryTreeViewBrand" IsOptionElementsEnabled="True">
+
+                                                                    </telerik:RadTreeView>
+                                                                </StackPanel>
+                                                            </telerik:RadExpander>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </ScrollViewer>
+                                            </Grid>
+                                        </Grid>
+                                    </telerik:RadTabItem.Content>
+                                </telerik:RadTabItem>
+                            </telerik:RadTabControl.Items>
+                        </telerik:RadTabControl>
+                    </Grid>
+                    <Grid x:Name="grdBottomBtns" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="10,5" IsEnabled="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button KeyboardNavigation.TabNavigation="Local" TabIndex="6" HorizontalAlignment="Right" Name="clearBtn" Click="clearBtn_Click" Height="24">Clear Filter</Button>
+                        <Button Grid.Column="2" KeyboardNavigation.TabNavigation="Local" TabIndex="7" HorizontalAlignment="Right" Name="ApplyBtn" Click="ApplyBtn_Click" Height="24">Apply Filter</Button>
+                    </Grid>
+                    <!--<StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0" Grid.Row="2">
+                        <Image Name="clientLogoImage" Visibility="Visible"  Height="40" HorizontalAlignment="Center" Margin="10,0,0,0"></Image>
+                    </StackPanel>-->
+                </Grid>
+                <GridSplitter Grid.Column="1"
+            Width="2"
+            HorizontalAlignment="Stretch" Margin="1,0,2,0"/>
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="70"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Name="gridColumn">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Label FontSize="14">Total company count (</Label>
+                            <Label FontSize="14" Margin="-10,0,0,0" Name="templateReviewCount" FontWeight="Bold">0</Label>
+                            <Label FontSize="14" Margin="-10,0,0,0">)</Label>
+                        </StackPanel>
+                        <telerik:RadGridView Grid.Row="1" PreviewKeyUp="radGridViewGeoAndIndustry_PreviewKeyUp"  AlternationCount="2" GroupRenderMode="Flat" 
+                                     ShouldCloseFilteringPopupOnKeyboardFocusChanged="True"
+                                     ShowSearchPanel="True" SearchPanelCloseButtonVisibility="Collapsed"  
+                                     CanUserSelect="False" 
+                                     CanUserSearch="False" 
+                                     LeftFrozenColumnCount="3" RowIndicatorVisibility="Collapsed" Name="radGridViewGeoAndIndustry" IsReadOnly="True"  BorderBrush="Gray" BorderThickness="1" 
+                                     ShowToolTipOnTrimmedText="True" SelectionChanged="radGridViewGeoAndIndustry_SelectionChanged" SelectionMode="Multiple" AutoGenerateColumns="False" 
+                                     Width="Auto" ColumnWidth="100" ScrollViewer.HorizontalScrollBarVisibility="Auto" TabIndex="8">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged" >
+                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding ElementName=LstRepositoryList,Path=SelectedItem}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="SelectionChanging" >
+                                    <i:InvokeCommandAction Command="{Binding SelectionChangingCommand}" CommandParameter="{Binding ElementName=LstRepositoryList,Path=SelectedItem}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <telerik:RadGridView.ControlPanelItems>
+                                <telerik:ControlPanelItem ButtonTooltip="Export to excel" >
+                                    <telerik:ControlPanelItem.ButtonContent>
+                                        <Button x:Name="btnExport" IsEnabled="True" Cursor="Hand" Height="25" Width="25" Click="btnExport_Click">
+                                            <Button.Template>
+                                                <ControlTemplate>
+                                                    <Image Source="{StaticResource Excel_export_logoDrawingImage}"/>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </telerik:ControlPanelItem.ButtonContent>
+                                </telerik:ControlPanelItem>
+                                <telerik:ControlPanelItem ButtonTooltip="Click to modify column list">
+                                    <telerik:ControlPanelItem.ButtonContent>
+                                        <Grid HorizontalAlignment="Center" Height="25" Width="25">
+                                            <Image Source="{StaticResource Excel_settings_logoDrawingImage}"/>
+                                        </Grid>
+                                    </telerik:ControlPanelItem.ButtonContent>
+                                    <telerik:ControlPanelItem.Content>
+                                        <ListBox Cursor="Hand" Name="lbColumnChooser" ItemsSource="{Binding Columns}" BorderThickness="0">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox Content="{Binding Header, Mode=OneWay}" IsChecked="{Binding IsVisible, Mode=TwoWay}" >
+                                                        <CheckBox.Style>
+                                                            <Style TargetType="{x:Type CheckBox}">
+                                                                <Setter Property="IsEnabled" Value="True"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Header}" Value="Company Name">
+                                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Header}" Value="Ticker">
+                                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </CheckBox.Style>
+                                                    </CheckBox>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </telerik:ControlPanelItem.Content>
+                                </telerik:ControlPanelItem>
+                            </telerik:RadGridView.ControlPanelItems>
+
+                            <telerik:RadGridView.Columns>
+                                <telerik:GridViewSelectColumn PreviewMouseLeftButtonDown="selectCol_PreviewMouseLeftButtonDown" IsSelected="False" Name="selectCol">
+                                    <telerik:GridViewSelectColumn.Header>
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <CheckBox TabIndex="6" telerik:StyleManager.Theme="Fluent" Name="selectCheckBox" Checked="selectCheckBox_Checked" Unchecked="selectCheckBox_Unchecked" />
+                                        </StackPanel>
+                                    </telerik:GridViewSelectColumn.Header>
+                                </telerik:GridViewSelectColumn>
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding CompanyWebsite}"
+                   Header="" Width="40" IsFilterable="False" >
+                                    <telerik:GridViewDataColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button IsEnabled="True" Style="{StaticResource ButtonStyleNoHighlighting}" ToolTip="{Binding WebIconToolTip}" x:Name="btnCompanyWebsite" Click="btnCompanyWebsite_Click" Cursor="Hand" HorizontalAlignment="Left" BorderBrush="LightGray" BorderThickness="1" Margin="5,0,0,0" Foreground="AliceBlue" Height="15" Width="15">
+                                                <Button.Background>
+                                                    <ImageBrush x:Name="ImgCompanyWebsite" ImageSource="{Binding WebIconPath}" Stretch="Uniform"/>
+                                                </Button.Background>
+                                            </Button>
+                                        </DataTemplate>
+                                    </telerik:GridViewDataColumn.CellTemplate>
+                                </telerik:GridViewDataColumn>
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding ID}" 
+                   Header="ID" IsVisible="False"  Width="Auto"/>
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding CompanyName}" 
+                   Header="Company Name" Width="140" />
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding CompanyTicker}" 
+                   Header="Ticker" Width="100" />
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding Filter1_1}" x:Name="Filter1_1Column" Width="140" IsVisible="True" >
+                                </telerik:GridViewDataColumn>
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding Filter2_1}" x:Name="Filter2_1Column" Width="140" IsVisible="True" >
+                                </telerik:GridViewDataColumn>
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding Filter3_1}" x:Name="Filter3_1Column" Width="140" IsVisible="True" >
+                                </telerik:GridViewDataColumn>
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding Filter4_1}" x:Name="Filter4_1Column" Width="140" IsVisible="True" >
+                                </telerik:GridViewDataColumn>
+                            </telerik:RadGridView.Columns>
+                        </telerik:RadGridView>
+                        <telerik:RadGridView Name="radBrandGridView" Grid.Row="1" Visibility="Collapsed" AlternationCount="2" GroupRenderMode="Flat" 
+                                     ShowSearchPanel="False"  SelectionChanging="radGridViewGeoAndIndustry_SelectionChanging" SelectionChanged="radBrandGridView_SelectionChanged" CanUserSelect="False" MouseDoubleClick="radGridViewGeoAndIndustry_MouseDoubleClick" CanUserSearch="False" LeftFrozenColumnCount="3" RowIndicatorVisibility="Collapsed" SearchPanelBackground="Transparent"  IsReadOnly="True"  BorderBrush="Gray" BorderThickness="1" ShowToolTipOnTrimmedText="True"  SelectionMode="Multiple" AutoGenerateColumns="False" Width="Auto" ColumnWidth="100" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+                            <telerik:RadGridView.ControlPanelItems>
+                                <telerik:ControlPanelItem ButtonTooltip="Click to modify column list">
+                                    <telerik:ControlPanelItem.ButtonContent>
+                                        <Grid HorizontalAlignment="Center" Height="16" Width="16" Margin="-3,0,0,0">
+                                            <Path Data="M2.6822092E-06,12.000001 L6.0000029,12.000001 L6.0000029,15.000001 L2.6822092E-06,15.000001 z M2.6822092E-06,8.000001 L6.0000029,8.000001 L6.0000029,11.000001 L2.6822092E-06,11.000001 z M0,0 L6,0 L6,3 L0,3 z" Margin="4,0,9,0" Stretch="Fill"/>
+                                            <Path Data="M0,0 L6,0 L6,3 L0,3 z"  Height="3" Margin="4,4,9,0" Stretch="Fill" VerticalAlignment="Top"/>
+                                            <Path Data="M3,0 L3,3 L0,3 z"  HorizontalAlignment="Left" Height="3" Margin="0,4,0,0" Stretch="Fill" StrokeThickness="0" VerticalAlignment="Top" Width="3" RenderTransformOrigin="0.5,0.5">
+                                                <Path.RenderTransform>
+                                                    <TransformGroup>
+                                                        <RotateTransform Angle="-45"/>
+                                                        <ScaleTransform ScaleX="-2.3299793205922015E-08" ScaleY="4.4408920985006262E-16">
+                                                        </ScaleTransform>
+                                                    </TransformGroup>
+                                                </Path.RenderTransform>
+                                            </Path>
+                                            <Path Data="M0.50000036,12.499999 L2.5000005,12.499999 L2.5000005,14.499999 L0.50000036,14.499999 z M0.5,8.5 L2.5000002,8.5 L2.5000002,10.5 L0.5,10.5 z M0.5,4.5 L7.5,4.5 L7.5,6.5 L0.5,6.5 z M0.5,0.5 L7.5,0.5 L7.5,2.5 L0.5,2.5 z" HorizontalAlignment="Right" Stretch="Fill" Stroke="#FF767676" Width="8"/>
+                                        </Grid>
+                                    </telerik:ControlPanelItem.ButtonContent>
+                                    <telerik:ControlPanelItem.Content>
+                                        <ListBox Cursor="Hand" Name="lbColumnChooserBrand" ItemsSource="{Binding Columns}" BorderThickness="0">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox Content="{Binding Header, Mode=OneWay}" IsChecked="{Binding IsVisible, Mode=TwoWay}" />
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </telerik:ControlPanelItem.Content>
+                                </telerik:ControlPanelItem>
+                            </telerik:RadGridView.ControlPanelItems>
+
+                            <telerik:RadGridView.Columns>
+                                <telerik:GridViewSelectColumn  PreviewMouseLeftButtonDown="selectCol_PreviewMouseLeftButtonDown" IsSelected="False" Name="selectColBrand">
+                                    <telerik:GridViewSelectColumn.Header>
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <CheckBox telerik:StyleManager.Theme="Fluent" Name="selectCheckBoxBrand" Checked="selectCheckBox_Checked" Unchecked="selectCheckBox_Unchecked" />
+                                        </StackPanel>
+                                    </telerik:GridViewSelectColumn.Header>
+                                </telerik:GridViewSelectColumn>
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding BrandId}" 
+                   Header="ID"  Width="Auto" />
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding BrandName}" 
+                   Header="Brand Name" Width="140" />
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding CompanyName}" 
+                   Header="Company Name" Width="140" />
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding CompanyTicker}" 
+                   Header="Company Ticker" Width="140" />
+                            </telerik:RadGridView.Columns>
+                        </telerik:RadGridView>
+                        <Grid  x:Name="lblNodataResult" Grid.Row="1" Margin="0.5,1,0,1" Background="WhiteSmoke" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <TextBlock Background="Transparent" Text="🖜 Select data and click 'Apply Filter' to view result(s)" FontSize="18" FontWeight="Bold" Foreground="#80315DA4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid PreviewKeyDown="previewColumn_KeyDown" Name="previewColumn" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" >
+                            <Label FontSize="14">Cart (</Label>
+                            <Label FontSize="14" Name="countLabel" Margin="-10,0,0,0" FontWeight="Bold">0</Label>
+                            <Label FontSize="14" Margin="-10,0,0,0">)</Label>
+                        </StackPanel>
+
+                        <Grid Name="grdpanel" Grid.Row="1" Margin="10,0,10,0">
+                            <DockPanel Grid.Row="1">
+                                <telerik:RadTabControl telerik:StyleManager.Theme="Office2013" Grid.Row="1" FlowDirection="LeftToRight" Name="tabcontrolPanelViews" SelectionChanged="tabcontrolPanelViews_SelectionChanged">
+                                    <telerik:RadTabItem Name="tabItemTileView" FlowDirection="LeftToRight" Cursor="Hand">
+                                        <telerik:RadTabItem.Header>
+                                            <Image x:Name="tablogoImg" Height="20" Width="20" ToolTip="Tile view" Source="{StaticResource showLogoImg}"/>
+                                        </telerik:RadTabItem.Header>
+                                        <Grid Grid.Row="1" ClipToBounds="True" Margin="0" Visibility="Visible" Name="logoGridPanel" Background="White" PreviewKeyDown="logoGridPanel_PreviewKeyDown" p:DragDropExtension.ScrollOnDragDrop="True">
+                                            <Border BorderThickness="0" BorderBrush="Gray">
+                                                <ScrollViewer Name="wrapPanelScroll" BorderThickness="0" BorderBrush="Gray">
+                                                    <ItemsControl x:Name="CartTilePanel"  VirtualizingPanel.IsVirtualizing="True">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel x:Name="logoWrapPanel" ClipToBounds="True" MouseMove="logoWrapPanel_MouseMove" GiveFeedback="logoWrapPanel_GiveFeedback" FlowDirection="LeftToRight"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <CustomCtrls:LogoTileUC Visibility="{Binding LogoData.IsActive, Converter={StaticResource BooleanToVisiblityConverter}}" AllowDrop="True"
+                                                                                             ToolTip="{Binding LogoData.CompanyName}"
+                                                                                             MouseMove="Luc_MouseMove"
+                                                                                             Drop="Luc_Drop"/>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                    <!--<WrapPanel VerticalAlignment="Top" ClipToBounds="True" Name="logoWrapPanel" MouseMove="logoWrapPanel_MouseMove" GiveFeedback="logoWrapPanel_GiveFeedback" FlowDirection="LeftToRight">
+                                                    </WrapPanel>-->
+                                                </ScrollViewer>
+                                            </Border>
+                                        </Grid>
+                                    </telerik:RadTabItem>
+
+                                    <telerik:RadTabItem Name="tabItemListView" FlowDirection="LeftToRight" Cursor="Hand">
+                                        <telerik:RadTabItem.Header>
+                                            <Image x:Name="tablogoList" Height="20" Width="20" Source="{StaticResource showLogoName}" ToolTip="List view"/>
+                                        </telerik:RadTabItem.Header>
+                                        <Grid Grid.Row="1" AllowDrop="True" Name="radGridViewlogoPreviewGrid" Visibility="Collapsed" Margin="0">
+                                            <telerik:RadGridView GroupRenderMode="Flat"
+                                                                 ShouldCloseFilteringPopupOnKeyboardFocusChanged="True" AlternationCount="2"   
+                                                      ItemsSource="{Binding CartSource}"  CanUserSortColumns="False" 
+                                                     ShowGroupPanel="False" CanUserGroupColumns="False" AllowDrop="True" 
+                                                     Focusable="False" IsFilteringAllowed="False" RowIndicatorVisibility="Collapsed" 
+                                                     FrozenColumnsSplitterVisibility="Collapsed"  SelectionMode="Multiple"  
+                                                     CellLoaded="radGridViewlogoPreview_CellLoaded" 
+                                                     IsReadOnly="True" AutoGenerateColumns="False" CanUserSearch="True" 
+                                                     Name="radCartGridView" Width="Auto" ColumnWidth="*" 
+                                                     Margin="0,1,0,-1" CanUserSelect="False"
+                                                      telerik:ScrollingSettingsBehavior.IsEnabled="True"
+                                                      telerik:ScrollingSettingsBehavior.ScrollAreaPadding="0,30"
+                                                      telerik:ScrollingSettingsBehavior.ScrollStep="24"
+                                                      telerik:ScrollingSettingsBehavior.ScrollStepTime="00:00:00.05">
+                                                <telerik:RadGridView.Resources>
+                                                    <DataTemplate x:Key="DraggedItemTemplate">
+                                                        <Border BorderBrush="Gray">
+                                                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                </Grid.RowDefinitions>
+                                                                <TextBlock Background="White" Grid.Column="0" HorizontalAlignment="Left" Margin="5,0" VerticalAlignment="Center" Text="Dragging : " FontWeight="DemiBold" />
+                                                                <TextBlock Background="White" Grid.Column="1" HorizontalAlignment="Left" Margin="5,0" VerticalAlignment="Center" Text="{Binding CurrentDraggedItem.index}" />
+                                                                <TextBlock Background="White" Grid.Column="2" HorizontalAlignment="Left" Margin="5,0" VerticalAlignment="Center" Text="{Binding CurrentDraggedItem.ContentData}" />
+                                                                <TextBlock Background="White" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="5,0" VerticalAlignment="Center" Text="To Position : " />
+                                                                <TextBlock Background="White" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="5,0" VerticalAlignment="Center" Text="{Binding CurrentDraggedOverItem.index}" />
+                                                                <TextBlock Background="White" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" Margin="5,0" VerticalAlignment="Center" Text="{Binding CurrentDraggedOverItem.ContentData}" />
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </telerik:RadGridView.Resources>
+                                                <telerik:RadGridView.AlternateRowStyle>
+                                                    <Style TargetType="telerik:GridViewRow">
+                                                        <Setter Property="Visibility" Value="{Binding LogoData.IsActive, Converter={StaticResource BooleanToVisiblityConverter}}"/>
+                                                        <Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
+                                                        <Setter Property="telerik:DragDropManager.TouchDragTrigger" Value="TapAndHold"/>
+                                                        <Setter Property="Background" Value="WhiteSmoke" />
+                                                    </Style>
+                                                </telerik:RadGridView.AlternateRowStyle>
+
+                                                <telerik:RadGridView.RowStyle>
+                                                    <Style TargetType="telerik:GridViewRow">
+                                                        <Setter Property="Visibility" Value="{Binding  LogoData.IsActive, Converter={StaticResource BooleanToVisiblityConverter}}"/>
+                                                        <Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
+                                                        <Setter Property="telerik:DragDropManager.TouchDragTrigger" Value="TapAndHold"/>
+                                                        <Setter Property="Background" Value="White" />
+                                                    </Style>
+                                                </telerik:RadGridView.RowStyle>
+                                                <telerik:RadGridView.Columns>
+                                                    <telerik:GridViewDataColumn Width="50" Focusable="False" Name="SNo" Header="Sr. No." DataMemberBinding="{Binding LogoData.RowCounter}"></telerik:GridViewDataColumn>
+                                                    <telerik:GridViewDataColumn Width="*"  Name="colName" Focusable="False" DataMemberBinding="{Binding LogoData.CompanyName}" 
+                   Header="Company Name/Brand Name" />
+                                                    <telerik:GridViewDataColumn Width="Auto" Header="Actions" >
+                                                        <telerik:GridViewDataColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <Viewbox>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <Button Height="15" Width="15" ToolTip="Duplicate Logo" Style="{StaticResource ButtonStyleNoHighlighting}" Command="{Binding CreateCopy_Command}" >
+                                                                            <Button.Background>
+                                                                                <ImageBrush ImageSource="{StaticResource duplicateIcon}" Stretch="Uniform"/>
+                                                                            </Button.Background>
+                                                                        </Button>
+                                                                        <Button Height="20" Width="20" Style="{StaticResource ButtonStyleNoHighlighting}" ToolTip="Click to delete" Name="deleteColumn" Command="{Binding Delete_command}">
+                                                                            <Button.Background>
+                                                                                <ImageBrush ImageSource="{StaticResource deleteImage}" Stretch="Uniform"/>
+                                                                            </Button.Background>
+                                                                        </Button>
+                                                                    </StackPanel>
+                                                                </Viewbox>
+                                                            </DataTemplate>
+                                                        </telerik:GridViewDataColumn.CellTemplate>
+                                                    </telerik:GridViewDataColumn>
+                                                </telerik:RadGridView.Columns>
+                                            </telerik:RadGridView>
+                                        </Grid>
+                                    </telerik:RadTabItem>
+
+                                </telerik:RadTabControl>
+                            </DockPanel>
+                            <StackPanel VerticalAlignment="Top" Orientation="Horizontal" HorizontalAlignment="Left" Margin="80,5,0,0">
+                                <Button TabIndex="9" ToolTip="A-Z" Style="{StaticResource ButtonStyle1}" Cursor="Hand" IsEnabled="False" Name="alphaSort" Visibility="Visible" Click="alphaSort_Click" Margin="5,0,0,0" BorderThickness="1" BorderBrush="LightGray" Foreground="AliceBlue" Height="20" Width="20">
+                                    <Button.Background>
+                                        <ImageBrush x:Name="AtoZImage" ImageSource="{StaticResource Excel_atoz_logoDrawingImage}" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+
+                                <Button TabIndex="10" Style="{StaticResource ButtonStyle1}" IsEnabled="False" x:Name="numSort" Click="numSort_Click" Cursor="Hand" ToolTip="Reverse Order" BorderBrush="LightGray" BorderThickness="1" Margin="5,0,0,0" Foreground="AliceBlue" Height="20" Width="20">
+                                    <Button.Background>
+                                        <ImageBrush x:Name="NumSortImage" ImageSource="{StaticResource Excel_Sort_logoDrawingImage}" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+
+                                <Button TabIndex="11" Style="{StaticResource ButtonStyle1}" IsEnabled="False" x:Name="btnDelete" Click="btnDelete_Click"  Cursor="Hand" ToolTip="Delete" Margin="5,0,0,0" BorderBrush="LightGray" Foreground="AliceBlue" Height="20" Width="20" VerticalAlignment="Bottom">
+                                    <Button.Background>
+                                        <ImageBrush x:Name="DeleteImage" ImageSource="{StaticResource DeleteDrawingImageLight}" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+
+                                <Button TabIndex="12" Height="20" Width="20" Visibility="Visible" Cursor="Hand" Style="{StaticResource ButtonStyle1}" IsEnabled="False" Margin="5,0,0,0" ToolTip="Export to excel" x:Name="btnExportCart" Click="btnExportCart_Click"  BorderBrush="LightGray" BorderThickness="1" VerticalAlignment="Bottom">
+                                    <Button.Background>
+                                        <ImageBrush x:Name="btnExportCartImg" ImageSource="{StaticResource Excel_export_logoDrawingImage}" Stretch="Uniform" />
+                                    </Button.Background>
+                                </Button>
+
+                                <Button TabIndex="13" Style="{StaticResource ButtonStyle1}" ToolTip="Expand" IsEnabled="True" Cursor="Hand" x:Name="logoExpander" Click="logoExpander_Click" Margin="5,0,0,0"  BorderBrush="LightGray" BorderThickness="1" Height="20" Width="20">
+                                    <Button.Background>
+                                        <ImageBrush x:Name="expanderImg" ImageSource="{StaticResource Excel_expand_logoDrawingImage}" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+
+
+                                <Button Style="{StaticResource ButtonStyle1}" Visibility="Collapsed" IsEnabled="False" Cursor="Hand" ToolTip="List view" x:Name="showLogoList"  Click="showLogoList_Click" Margin="5,0,0,0"  BorderBrush="LightGray" BorderThickness="1" Height="25" Width="25">
+                                    <Button.Background>
+                                        <ImageBrush x:Name="logoList" ImageSource="{StaticResource showLogoName}"/>
+                                    </Button.Background>
+                                </Button>
+
+                                <Button Style="{StaticResource ButtonStyle1}" Visibility="Collapsed" IsEnabled="False" ToolTip="Tile view" Cursor="Hand" x:Name="showLogoBtn" Click="showLogoBtn_Click" BorderThickness="1"  BorderBrush="LightGray" Margin="5,0,0,0" Height="25" Width="25">
+                                    <Button.Background>
+                                        <ImageBrush x:Name="logoImg" ImageSource="{StaticResource showLogoImg}"/>
+                                    </Button.Background>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+
+                    <DockPanel Grid.Row="1">
+                        <TextBlock Text="* Hold 'Shift' key together with the left mouse click to select multiple headers for sorting." TextWrapping="Wrap" Foreground="#4682B4" FontSize="12" Margin="5"/>
+                        <telerik:RadComboBox Visibility="Hidden" HorizontalAlignment="Left" IsEnabled="False" Name="cmbResolution" Height="30" Width="150" Margin="0,0,35,0" SelectedIndex="0" Text="New Slide/Template"></telerik:RadComboBox>
+                    </DockPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1"  Grid.Column="1">
+
+                        <DockPanel HorizontalAlignment="Right" VerticalAlignment="Center" Name="logoResizePanel" IsEnabled="False" Margin="0,0,10,0" Background="LightGray">
+                            <Label ToolTip="Resize logo" Margin="5,0,0,0">Resize(px):</Label>
+                            <TextBox Text="{Binding ResizeNumber, FallbackValue='100'}" TabIndex="14" PreviewTextInput="txtLogoSize_PreviewTextInput" MaxLength="3" ToolTip="Enter size upto 999(px) to resize the logos in Non-Printable area" Height="20" Width="28" Name="txtLogoSize" Margin="0,0,10,0" VerticalContentAlignment="Center"></TextBox>
+                        </DockPanel>
+
+                        <telerik:RadComboBox TabIndex="15"  Margin="0,0,10,0" HorizontalAlignment="Right" SelectionChanged="cmbImportType_SelectionChanged" Name="cmbImportType" Height="30" Width="140"></telerik:RadComboBox>
+
+                        <Button TabIndex="16" Margin="0,0,10,0" Name="clearAllBtn" Click="clearAllBtn_Click" Style="{StaticResource ExcelButtonStyleSecondary}">Clear all</Button>
+                        <Button  TabIndex="17" ToolTip="Click to insert the selected logos in a slide" IsEnabled="False" Margin="0,0,8,0" Name="exportBtn" Click="exportBtn_Click">Next</Button> 
+                    </StackPanel>
+                </Grid>
+
+            </Grid>
+
+            <Grid Grid.RowSpan="2" Name="TileViewBusyIndicator" Visibility="Collapsed" Background="#33000000" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" Background="White" CornerRadius="10" BorderBrush="Black">
+                    <StackPanel Background="{Binding ElementName=radBusyIndicator}">
+                        <telerik:RadBusyIndicator Name="radBusyIndicator" Foreground="Black" Background="White" VerticalAlignment="Stretch" IsBusy="{Binding ElementName=TileViewBusyIndicator, Path=IsVisible}" HorizontalAlignment="Stretch" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <Grid Grid.RowSpan="2" Name="BrdrProgressIndicator" Visibility="Collapsed" Background="#33000000" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" Background="White" CornerRadius="10" BorderBrush="Black">
+                    <StackPanel x:Name="StkProgress" VerticalAlignment="Center" MinWidth="320" Width="Auto" Margin="10">
+                        <TextBlock x:Name="txtLoadingLabel" Text="Downloading Files..." FontSize="13"
+						HorizontalAlignment="Left" FontFamily="Segoe UI" />
+                        <telerik:RadProgressBar x:Name="RadProgressBar1" Minimum="0" Maximum="100" Value="0" MinWidth="320" Width="Auto" Height="6"  Margin="0,10,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+        </Grid>
+    </telerik:RadBusyIndicator>
+</Window>
+
